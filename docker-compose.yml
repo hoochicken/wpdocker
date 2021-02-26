@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  wp:
+    # image: wordpress:latest
+    build: .
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./wp:/var/www/html
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal
+      WORDPRESS_DB_HOST: wpdb
+      WORDPRESS_DB_USER: wpus
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wpdb
+
+  wpdb:
+    image: mysql:5.7
+    container_name: wpdb
+    restart: always
+    volumes:
+      - "./db_data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wpus
+      MYSQL_PASSWORD: root
+
+  wppma:
+    container_name: wppma
+    depends_on:
+      - wpdb
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: wpdb
+      MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  db_data: {}

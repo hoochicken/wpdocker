@@ -1,7 +1,7 @@
 # wpdocker
 
 simple docker file for wordpress  
-xdebug included, e. g. use phpStoem for debugging
+xdebug included, e. g. use phpStorm for debugging
 
 * Start project by `docker-compose up`.
 * 127.0.0.1 in your browser => go through wordpress routine

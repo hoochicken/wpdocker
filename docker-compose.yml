@@ -37,6 +37,8 @@ services:
     environment:
       PMA_HOST: wpdb
       MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '8081:80'
 
 volumes:
   db_data: {}

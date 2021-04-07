@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+
+  elfwp:
+    # image: wordpress:latest
+    build: .
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./wp:/var/www/html
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal
+      WORDPRESS_DB_HOST: wpdb
+      WORDPRESS_DB_USER: wpus
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wpdb
+
+  wpdb:
+    image: mysql:5.7
+    container_name: wpdb
+    restart: always
+    volumes:
+      - "./dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wpus
+      MYSQL_PASSWORD: root
+
+  wppma:
+    container_name: wppma
+    depends_on:
+      - wpdb
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: wpdb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '8088:80'
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
+volumes:
+  dbdata: {}
